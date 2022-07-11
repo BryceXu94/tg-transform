@@ -1,16 +1,17 @@
-import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'fs';
-import { join } from 'path';
+import { readFile, writeFile } from 'fs-extra';
 import { cwd } from 'node:process';
 import { vueParser } from '../parser/vue';
 import { scriptParser } from '../parser/script';
 import { IFiles, PARSER_ENUM } from '../types';
 import { getFilesPath } from '../utils/read-files';
 import { prettierFormat } from '../utils/prettier'
+import { progress } from '../utils/progress'
+import { queue } from '../utils/queue'
 
 const sourceDir = `${cwd()}/src`;
 // const outputDir = join(__dirname, '../../output2');
 
-async function readFile(file: IFiles[0]) {
+async function parseFile(file: IFiles[0]) {
   return new Promise(async (resolve) => {
     const { name, path } = file;
     const suffix = name.split('.').pop();
@@ -36,7 +37,7 @@ async function readFile(file: IFiles[0]) {
       resolve(true);
       return;
     }
-    const code = readFileSync(path, {
+    const code = await readFile(path, {
       encoding: 'utf-8'
     });
     switch (suffix) {
@@ -62,7 +63,8 @@ async function readFile(file: IFiles[0]) {
     //     mkdirSync(curDir);
     //   }
     // })
-    writeFileSync(path, outputCode)
+    await writeFile(path, outputCode);
+    progress.add()
     resolve(true);
   })
 }
@@ -73,16 +75,22 @@ const run = async () => {
   //   mkdirSync(outputDir);
   // }
   const st = performance.now();
-  const paths = getFilesPath(sourceDir);
-  const arr:Promise<unknown>[] = []
-  paths.forEach(v => {
-    arr.push(
-      readFile(v)
-    )
-  })
+  const paths = await getFilesPath(sourceDir);
+  progress.setTotal(paths.length);
+  const arr:Promise<unknown>[]= []
+  for(const item of paths) {
+    arr.push(queue.run(async () => {
+      await parseFile(item);
+    }))
+  }
+  // paths.forEach(v => {
+  //   arr.push(
+  //     parseFile(v)
+  //   )
+  // })
   await Promise.all(arr)
   const et = performance.now();
-  console.log((et-st)/1000);
+  // console.log((et-st)/1000);
   
 };
 run();

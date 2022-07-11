@@ -1,5 +1,5 @@
 import { parse } from '@babel/parser';
-import traverse, { TraverseOptions } from '@babel/traverse';
+import traverse, { TraverseOptions, NodePath } from '@babel/traverse';
 import generate from '@babel/generator';
 import template from '@babel/template';
 
@@ -13,7 +13,8 @@ export class ScriptParser {
     
     traverse(ast, {
       Program: {
-        enter(path, state) {
+        enter(path) {
+          let elementPath: any = null;
           const names: string[] = [];
           let usedElement = false;
           path.traverse({
@@ -28,16 +29,17 @@ export class ScriptParser {
                     names.push(name.replace(/^El/, 'Tg'))
                   }
                 })
-                curPath.remove();
+                elementPath = curPath;
+                // curPath.remove();
               }
             },
           })
           if (usedElement) {
-            const tg = template(`import {${names.join(',')}} from '@tiangong/components';`)()
-            Array.isArray(tg) ? path.node.body.unshift(...tg): path.node.body.unshift(tg);
+            const uses = names.length === 0 ? 'TgComponents' : `{${names.join(',')}}`
+            const tg = template(`import ${uses} from '@tiangong/components';`)()
+            elementPath!.insertBefore(tg);
+            elementPath!.remove();
           }
-          // if (!(state as any).tgPath) {
-          // }
         }
       },
       // 处理ts声明
@@ -57,10 +59,8 @@ export class ScriptParser {
         enter(path) {
           const nameNode = (path.get('name') as any).node as any;
           if (nameNode.name.indexOf('el-') === 0) {
-            console.log('name', nameNode);
             nameNode.name = nameNode.name.replace(/^el-/, 'tg-');
           } else if (nameNode.name.indexOf('El') === 0) {
-            console.log('name', nameNode);
             nameNode.name = nameNode.name.replace(/^El/, 'Tg');
           }
         }
@@ -69,10 +69,8 @@ export class ScriptParser {
         enter(path) {
           const nameNode = (path.get('name') as any).node as any;
           if (nameNode.name.indexOf('el-') === 0) {
-            console.log('name', nameNode);
             nameNode.name = nameNode.name.replace(/^el-/, 'tg-');
           } else if (nameNode.name.indexOf('El') === 0) {
-            console.log('name', nameNode);
             nameNode.name = nameNode.name.replace(/^El/, 'Tg');
           }
         }
@@ -84,8 +82,18 @@ export class ScriptParser {
           if (name && name.indexOf('El') === 0) {
             exprName.node.name = exprName.node.name.replace(/^El/, 'Tg');
           }
-          console.log('exprName.node.name', exprName.node.name);
-          
+        },
+      },
+      Identifier: {
+        enter(path) {
+          const name = path.node.name;
+          if (name && name.indexOf('El') === 0) {
+            if (name === 'ElementPlus') {
+              path.node.name = 'TgComponents';
+            } else {
+              path.node.name = path.node.name.replace(/^El/, 'Tg');
+            }
+          }
         },
       },
     });

@@ -11,7 +11,14 @@ class HtmlParser {
   private parser = new Parser();
   parse(code: string) {
     const ast = fromWebparser(this.parser.parse(code, '').rootNodes);
-    this.traverse(ast, {});
+    this.traverse(ast, {
+      enter(path) {
+        const { type, tagName  } = path;
+        if (type && tagName && type === 'element' && tagName.indexOf('el-') === 0) {
+          path.tagName = path.tagName!.replace(/^el-/, 'tg-');
+        }
+      },
+    });
     return toHTML(ast) as string;
   }
   private traverse(node: INode, opt: IOptions) {

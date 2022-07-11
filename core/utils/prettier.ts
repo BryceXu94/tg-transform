@@ -1,23 +1,23 @@
 import prettierEslint from 'prettier-eslint'
 import { ESLint } from 'eslint'
-import { readdirSync } from 'fs';
+import { readdir } from 'fs-extra';
 import { cwd } from 'node:process';
 import { PARSER_ENUM } from '../types';
 
 const eslint = new ESLint();
 
-const readPrettierConfig = () => {
+const readPrettierConfig = async () => {
   const rootDir = cwd();
-  const files = readdirSync(rootDir);
+  const files = await readdir(rootDir);
   let prettierConfig = {};
   if (files.includes('.prettierrc.js')) {
     prettierConfig = require(`${rootDir}/.prettierrc.js`)
   }
   return prettierConfig;
 };
-const readEslintConfig = () => {
+const readEslintConfig = async () => {
   const rootDir = cwd();
-  const files = readdirSync(rootDir);
+  const files = await readdir(rootDir);
   let eslintConfig = {};
   if (files.includes('.eslintrc.js')) {
     eslintConfig = eslint.calculateConfigForFile(`${rootDir}/.eslintrc.js`)
@@ -26,8 +26,8 @@ const readEslintConfig = () => {
 };
 
 export const prettierFormat = async (code: string, parser: PARSER_ENUM) => {
-  const eslintConfig = readEslintConfig();
-  const prettierConfig = readPrettierConfig();
+  const eslintConfig = await readEslintConfig();
+  const prettierConfig = await readPrettierConfig();
   const outputCode = await prettierEslint({
     text: code,
     eslintConfig,

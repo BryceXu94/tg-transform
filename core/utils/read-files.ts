@@ -1,24 +1,24 @@
-import { readdirSync } from 'fs';
+import { readdir } from 'fs-extra';
 import { IFiles } from '../types';
 
-export const getFilesPath = (path: string) => {
+export const getFilesPath = async (path: string) => {
   const files: IFiles = [];
-  deep(path, files);
+  await deep(path, files);
   return files;
 }
 
-function deep(path: string, files: IFiles) {
-  const paths = readdirSync(path, { withFileTypes: true });
-  paths.forEach(v => {
+async function deep(path: string, files: IFiles) {
+  const paths = await readdir(path, { withFileTypes: true });
+  for (const v of paths) {
     const isDirectory = v.isDirectory();
     const curFilePath = `${path}/${v.name}`;
     if (isDirectory) {
-      deep(curFilePath, files);
+      await deep(curFilePath, files);
     } else {
       files.push({
         name: v.name,
         path: curFilePath,
       })
     }
-  })
+  }
 }
