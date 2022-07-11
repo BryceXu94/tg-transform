@@ -23,8 +23,10 @@ export class ScriptParser {
                 usedElement = true;
                 const specifiers = curPath.get('specifiers');
                 specifiers.forEach(v => {
-                  const name = (v.node as any).imported.name;
-                  names.push(name.replace(/^El/, 'Tg'))
+                  const name = (v.node as any)?.imported?.name;
+                  if (name) {
+                    names.push(name.replace(/^El/, 'Tg'))
+                  }
                 })
                 curPath.remove();
               }
