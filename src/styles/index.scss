@@ -1,0 +1,406 @@
+@import "./reset-element.scss";
+@import "./normalize";
+@import "./animate";
+@import "./public";
+// @import "./iconfont/iconfont.css";
+// 基础样式
+*[contenteditable] {
+  user-select: auto !important;
+}
+
+*:focus {
+  outline: none;
+}
+
+input,
+textarea,
+select {
+  -webkit-appearance: none;
+  outline: none;
+  resize: none;
+  background-color: transparent;
+  text-size-adjust: 100%;
+}
+
+ul,
+ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: 1;
+  margin: 0;
+  font-weight: 400;
+}
+
+p {
+  margin: 0;
+}
+
+i,
+em {
+  font-style: normal;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  box-sizing: border-box;
+}
+
+body,
+html {
+  background-color: $fill-body;
+  height: 100%;
+  text-size-adjust: 100%;
+}
+
+html {
+  font-size: 50px;
+  line-height: 1.15;
+  box-sizing: border-box;
+}
+
+body {
+  min-width: 900px;
+  line-height: $line-height-base;
+  font-family: $font-family-body;
+  font-size: $font-size-base;
+  color: $color-text-base;
+  margin: 0 auto;
+  //user-select: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  outline: none;
+  color: var(--el-color-primary);
+  &:hover {
+    color: var(--el-color-primary-light-3);
+  }
+  &:active {
+    color: var(--el-color-primary-light-3);
+  }
+}
+
+img {
+  max-width: 100%;
+}
+
+code {
+  background: #eef1f6;
+  padding: 15px 16px;
+  margin-bottom: 20px;
+  display: block;
+  line-height: 36px;
+  font-size: 15px;
+  font-family: $font-family-code;
+}
+
+// mobile devices was hided
+@media only screen and (max-width: 575px) {
+  .hide-in-mobile {
+    display: none !important;
+  }
+
+  .app-layout-body {
+    .page-content {
+      margin: 15px 0 0;
+    }
+  }
+
+}
+
+.el-image-viewer__close {
+  color: #fff !important;
+}
+
+// form
+.form-item-normal {
+  .el-form-item__content {
+    line-height: 1;
+  }
+}
+
+.el-form-item-margin-clear {
+  .el-form-item {
+    margin-bottom: 0;
+  }
+}
+.el-input--small .el-input__inner{
+  border-radius: 2px;
+}
+.el-range-editor--small.el-input__inner{
+  border-radius: 2px;
+}
+/* reset element-ui */
+// card
+.el-card {
+  border: none;
+
+  // has bottom
+  &.card-bottom {
+    margin-bottom: 15px;
+  }
+
+  // header-enborder
+  &.card-header-border-none {
+    .el-card__header {
+      border: none;
+    }
+  }
+
+  &.card-gray {
+    .el-card__header {
+      background-color: $fill-grey;
+    }
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    position: relative;
+
+    .title {
+      font-size: $font-size-subhead;
+    }
+
+    .subtitle {
+      opacity: 0.5;
+      margin-left: 16px;
+      margin-right: 16px;
+      font-size: $font-size-caption-sm;
+    }
+
+    .extra {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+}
+
+// pagination
+.el-pagination {
+  font-weight: 400;
+  white-space: normal;
+}
+
+
+/* step */
+.el-step__head.is-process {
+  color: #808080;
+  border-color: #808080;
+}
+
+.el-step__title.is-process {
+  font-weight: 400;
+  color: #808080;
+}
+
+.el-step__description.is-process {
+  color: #808080;
+}
+
+
+/* dialog */
+.dialog-full {
+  .el-dialog {
+    max-width: 860px;
+  }
+
+  &-large {
+    .el-dialog {
+      max-width: 1200px;
+    }
+  }
+
+  &-medium {
+    .el-dialog {
+      max-width: 860px;
+    }
+  }
+
+  &-small {
+    .el-dialog {
+      max-width: 640px;
+    }
+  }
+
+  &-min {
+    .el-dialog {
+      max-width: 320px;
+    }
+  }
+}
+
+// el-drawer
+.el-drawer {
+  width: 20% !important;
+  min-width: 300px !important;
+}
+
+
+/* 表单 */
+.form {
+  max-width: 640px;
+
+  &-label-min {
+    .el-form-item__label {
+      line-height: 20px;
+    }
+  }
+}
+
+/* select */
+.select-full {
+  &.el-select {
+    width: 100%;
+  }
+  &.el-date-editor{
+    width: 100%;
+  }
+  &.el-cascader{
+    width: 100%;
+  }
+  .el-cascader,
+  .el-autocomplete {
+    width: 100%;
+  }
+}
+
+.el-cascader {
+  input {
+    background-color: #fff;
+  }
+}
+
+
+
+/* el-timeline */
+.el-timeline-item__wrapper {
+  top: 0;
+}
+
+
+.el-drawer__body {
+  overflow: auto;
+}
+
+.el-tooltip__popper {
+  max-width: calc(80% - #{$app-sider-width});
+  line-height: 20px;
+}
+
+// loading 遮罩层 背景颜色
+.el-loading-mask {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+// table 中的下拉宽
+.el-table td,
+.el-table th {
+  padding: 5px 0;
+}
+
+.el-table .el-select .el-input.el-input--suffix {
+  padding: 0;
+}
+
+.el-table {
+  thead {
+    th {
+      background: #f5f7fa;
+    }
+  }
+
+  th div.el-select {
+    line-height: 23px;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+
+
+.el-form.fixed-el-form-item-height {
+
+  .el-form-item--medium,
+  .el-form-item--medium .el-form-item__content,
+  .el-form-item--medium .el-form-item__label {
+    height: 36px;
+  }
+
+  .el-form-item--small,
+  .el-form-item--small .el-form-item__content,
+  .el-form-item--small .el-form-item__label {
+    min-height: 32px;
+  }
+
+  .el-form-item--mini,
+  .el-form-item--mini .el-form-item__content,
+  .el-form-item--mini .el-form-item__label {
+    height: 28px;
+  }
+}
+
+// 图片上传
+.uploder-100>.uploader .el-upload--picture-card,
+.uploder-100>.upload-image-list>.image-item,
+.uploder-100 .uploader-by-paste-handler {
+  width: 100px !important;
+  height: 100px !important;
+  line-height: 100px !important;
+}
+
+.must-icon__red::before {
+  content: '*';
+  color: red;
+  margin-right: 5px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.el-image__error-slot {
+  height: 100%;
+  border: 1px solid #eee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+// 详情页面布局
+.detail-container {
+  padding: 20px 0;
+  background-color: #fff;
+  border-radius: 8px;
+}
+.select-width {
+  width: 100%;
+}
+.btn-red {
+  color: red;
+}
+
+// 文字换行
+.text-wrap {
+  word-break: break-all;
+  white-space: pre-wrap;
+}

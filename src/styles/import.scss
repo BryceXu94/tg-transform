@@ -1,0 +1,29 @@
+@use "sass:map";
+@forward 'element-plus/theme-chalk/src/common/var.scss' with (
+  $colors: (
+    'white': #ffffff,
+    'black': #000000,
+    'primary': (
+      'base': #3A64E6,
+    ),
+    'success': (
+      'base': #49D267,
+    ),
+    'warning': (
+      'base': #FF7A06,
+    ),
+    'danger': (
+      'base': #FB4C3E,
+    ),
+    'error': (
+      'base': #FB4C3E,
+    ),
+    'info': (
+      'base': #909399,
+    ),
+  ),
+);
+// 函数, 混合, 主题, 变量名称等对外引用入口
+@import "./functions/index";
+@import "./mixins/index";
+@import "./theme/default";

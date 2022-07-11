@@ -1,0 +1,98 @@
+@import '../color.scss';
+@import "element-plus/theme-chalk/src/index";
+.color-primary{
+  color: var(--el-color-primary) !important;
+  &:hover{
+    color: var(--el-color-primary) !important;
+  }
+}
+.color-success{
+  color: var(--el-color-success) !important;
+  &:hover{
+    color: var(--el-color-success) !important;
+  }
+}
+.color-warning{
+  color: var(--el-color-warning) !important;
+  &:hover{
+    color: var(--el-color-warning) !important;
+  }
+}
+.color-error{
+  color: var(--el-color-error) !important;
+  &:hover,:focus{
+    color: var(--el-color-error) !important;
+  }
+}
+.color-grey{
+  color: var($color-text-auxiliary) !important;
+  &:hover,:focus{
+    color: var($color-text-auxiliary) !important;
+  }
+}
+// .el-button--primary.is-plain{
+//   border-color: var(--el-color-primary);
+//   background-color: #fff;
+//   color: var(--el-color-primary);
+//   &:hover{
+//     border-color: var(--el-color-primary);
+//     background-color: #fff;
+//     color: var(--el-color-primary);
+//   }
+//   &:focus{
+//     border-color: var(--el-color-primary);
+//     background-color: #fff;
+//     color: var(--el-color-primary);
+//   }
+// }
+.el-table{
+  --el-table-header-bg-color: #F7F9FC;
+  .th.el-table-fixed-column--left,th.el-table-fixed-column--right{
+    background-color: var(--el-table-header-bg-color) !important;
+  }
+}
+.el-table--striped .el-table__body tr.el-table__row--striped td.el-table__cell{
+  background-color: var(--el-table-header-bg-color);
+}
+.el-table--border th{
+  height: 48px;
+  color: #303133;
+  user-select: initial!important;
+}
+.el-table--small{
+  font-size: 14px;
+  tbody td{
+    padding: 12px 0;
+  }
+  .el-form-item{
+    margin-top: 22px;
+    margin-bottom: 22px;
+  }
+}
+.el-button--small.el-button--text{
+  font-size: 14px;
+  padding-top: 0;
+  padding-bottom: 0;
+  min-height: auto;
+}
+// .el-popper{
+//   max-width: 500px;
+// }
+.el-form-item__content{
+  word-break: break-word;
+}
+.el-dialog__header{
+  border-bottom: 1px solid #F0F0F0;
+  font-size: 18px;
+}
+.el-dialog__title{
+  font-weight: 550;
+  color: #515151;
+}
+.el-dialog__footer{
+  border-top: 1px solid #F0F0F0;
+}
+
+.el-popper[role="tooltip"]{
+  max-width: 80vw;
+}
