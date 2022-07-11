@@ -7,9 +7,9 @@ import { getFilesPath } from '../utils/read-files';
 import { prettierFormat } from '../utils/prettier'
 import { progress } from '../utils/progress'
 import { queue } from '../utils/queue'
+import inquirer from 'inquirer';
 
 const sourceDir = `${cwd()}/src`;
-// const outputDir = join(__dirname, '../../output2');
 
 async function parseFile(file: IFiles[0]) {
   return new Promise(async (resolve) => {
@@ -54,15 +54,6 @@ async function parseFile(file: IFiles[0]) {
         break;
     }
     outputCode = await prettierFormat(outputCode, parser);
-    // const outputPath = path.replace(tempDir, outputDir);
-    // const dirPaths = outputPath.replace(outputDir, '').replace(name, '').split('/').filter(v => v);
-    // let curDir = outputDir;
-    // dirPaths.forEach(v => {
-    //   curDir += `/${v}`
-    //   if (!existsSync(curDir)) {
-    //     mkdirSync(curDir);
-    //   }
-    // })
     await writeFile(path, outputCode);
     progress.add()
     resolve(true);
@@ -70,27 +61,30 @@ async function parseFile(file: IFiles[0]) {
 }
 
 const run = async () => {
-  // const isExist = existsSync(outputDir);
-  // if (!isExist) {
-  //   mkdirSync(outputDir);
-  // }
-  const st = performance.now();
-  const paths = await getFilesPath(sourceDir);
-  progress.setTotal(paths.length);
-  const arr:Promise<unknown>[]= []
-  for(const item of paths) {
-    arr.push(queue.run(async () => {
-      await parseFile(item);
-    }))
-  }
-  // paths.forEach(v => {
-  //   arr.push(
-  //     parseFile(v)
-  //   )
-  // })
-  await Promise.all(arr)
-  const et = performance.now();
-  // console.log((et-st)/1000);
+  const promptName = `将对${sourceDir}进行转换`;
+  inquirer.prompt([
+    {
+      name: promptName,
+      default: 'yes',
+      
+    }
+  ]).then(async (res) => {
+    if (res[promptName] === 'yes') {
+      const st = performance.now();
+      const paths = await getFilesPath(sourceDir);
+      progress.setTotal(paths.length);
+      const arr:Promise<unknown>[]= []
+      for(const item of paths) {
+        arr.push(queue.run(async () => {
+          await parseFile(item);
+        }))
+      }
+      await Promise.all(arr)
+      const et = performance.now();
+      console.log((et-st)/1000);
+
+    }
+  })
   
 };
 run();
