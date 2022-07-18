@@ -7,9 +7,8 @@ import { getFilesPath } from '../utils/read-files';
 import { prettierFormat } from '../utils/prettier'
 import { progress } from '../utils/progress'
 import { queue } from '../utils/queue'
-import inquirer from 'inquirer';
 
-const sourceDir = `${cwd()}/src`;
+export const sourceDir = `${cwd()}/src`;
 
 async function parseFile(file: IFiles[0]) {
   return new Promise(async (resolve) => {
@@ -34,6 +33,7 @@ async function parseFile(file: IFiles[0]) {
         break;
     }
     if (parser === PARSER_ENUM.UN_KNOW) {
+      progress.add()
       resolve(true);
       return;
     }
@@ -54,38 +54,25 @@ async function parseFile(file: IFiles[0]) {
         break;
     }
     outputCode = await prettierFormat(outputCode, parser);
-    await writeFile(path, outputCode);
     progress.add()
+    await writeFile(path, outputCode);
     resolve(true);
   })
 }
 
-const run = async () => {
-  const promptName = `将对${sourceDir}进行转换`;
-  inquirer.prompt([
-    {
-      name: promptName,
-      default: 'yes',
-      
-    }
-  ]).then(async (res) => {
-    if (res[promptName] === 'yes') {
-      const st = performance.now();
-      const paths = await getFilesPath(sourceDir);
-      progress.setTotal(paths.length);
-      const arr:Promise<unknown>[]= []
-      for(const item of paths) {
-        arr.push(queue.run(async () => {
-          await parseFile(item);
-        }))
-      }
-      await Promise.all(arr)
-      const et = performance.now();
-      console.log((et-st)/1000);
-
-    }
-  })
-  
+export const run = async () => {
+  // const st = performance.now();
+  const paths = await getFilesPath(sourceDir);
+  progress.setTotal(paths.length);
+  const arr:Promise<unknown>[]= []
+  for(const item of paths) {
+    arr.push(queue.run(async () => {
+      await parseFile(item);
+    }))
+  }
+  await Promise.all(arr)
+  // const et = performance.now();
+  // console.log((et-st)/1000);
 };
-run();
 
+// run();

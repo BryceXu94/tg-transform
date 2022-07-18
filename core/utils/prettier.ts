@@ -6,21 +6,30 @@ import { PARSER_ENUM } from '../types';
 
 const eslint = new ESLint();
 
+let prettierConfig = null;
 const readPrettierConfig = async () => {
+  if (prettierConfig) return prettierConfig;
+  prettierConfig = {};
   const rootDir = cwd();
   const files = await readdir(rootDir);
-  let prettierConfig = {};
   if (files.includes('.prettierrc.js')) {
     prettierConfig = require(`${rootDir}/.prettierrc.js`)
   }
   return prettierConfig;
 };
+let eslintConfig: any = null;
 const readEslintConfig = async () => {
+  if (eslintConfig) return eslintConfig;
+  eslintConfig = {};
   const rootDir = cwd();
   const files = await readdir(rootDir);
-  let eslintConfig = {};
   if (files.includes('.eslintrc.js')) {
-    eslintConfig = eslint.calculateConfigForFile(`${rootDir}/.eslintrc.js`)
+    eslintConfig = await eslint.calculateConfigForFile(`${rootDir}/.eslintrc.js`)
+    eslintConfig.overrideConfig = {
+      plugins: eslintConfig.plugins,
+    };
+    delete eslintConfig.plugins;
+    
   }
   return eslintConfig;
 };

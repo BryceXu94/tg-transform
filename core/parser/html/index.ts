@@ -23,8 +23,8 @@ class HtmlParser {
   }
   private traverse(node: INode, opt: IOptions) {
     const { enter } = opt;
+    enter?.(node);
     if (node?.children?.length && enter) {
-      enter?.(node);
       node.children.forEach(v => {
         this.traverse(v, {
           enter,

@@ -1,22 +1,22 @@
 {
   "compilerOptions": {
-    "rootDir": "./core",
-    "outDir": "build",
+    "outDir": "./build",
     "target": "esnext",
-    "module": "commonJs",
-    "strict": true,
+    "module": "commonjs",
+    "strict": false,
     "jsx": "preserve",
     "importHelpers": true,
     "moduleResolution": "node",
     "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "sourceMap": true,
-    "baseUrl": ".",
+    "allowJs": true,
+    "sourceMap": false,
+    "baseUrl": "./core",
     "types": [
       "./typing",
       "@types/node",
-      "path",
     ],
     "paths": {
       "@/*": [
@@ -28,9 +28,9 @@
       "dom",
       "dom.iterable",
       "scripthost"
-    ]
+    ],
   },
-  "exclude": [
-    "node_modules"
+  "include": [
+    "./core/**/*"
   ]
 }

@@ -1,5 +1,3 @@
-import chalk from 'chalk';
-import ora from 'ora';
 import ProgressBar from 'progress';
 
 

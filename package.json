@@ -1,17 +1,15 @@
 {
-  "name": "tg-transform",
+  "name": "tg-components-transform",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./build/main/index.js",
   "bin": {
-    "tg-components-transform": "./bin/index.ts"
+    "tg-components-transform": "./bin/index.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rimraf ./build && tsc",
-    "serve": "npm run build && node ./build/main/index.js",
-    "dev": "node --loader ts-node/esm --inspect ./core/main/index.ts",
-    "command": "ts-node ./bin/index.ts -s / --first a/b/c"
+    "build": "rimraf ./build && tsc && gulp",
+    "serve": "node ./build/main/index.js",
+    "dev": "node --loader ts-node/esm --inspect ./core/main/index.ts"
   },
   "author": "",
   "license": "ISC",
@@ -21,19 +19,20 @@
     "@babel/parser": "^7.18.6",
     "@babel/template": "^7.18.6",
     "@babel/traverse": "^7.18.6",
-    "@vue/compiler-sfc": "^3.2.37",
-    "eslint": "^8.19.0",
-    "fs-extra": "^10.1.0",
-    "inquirer": "^8.0.0",
-    "prettier-eslint": "^15.0.1",
-    "progress": "^2.0.3",
-    "tslib": "^2.4.0",
-    "typescript": "^4.7.4"
-  },
-  "devDependencies": {
     "@starptech/hast-util-from-webparser": "^0.10.0",
     "@starptech/prettyhtml-hast-to-html": "^0.10.0",
     "@starptech/webparser": "^0.10.0",
+    "@vue/compiler-sfc": "^3.2.37",
+    "chalk": "^4.0.0",
+    "commander": "^9.3.0",
+    "eslint": "^8.19.0",
+    "fs-extra": "^10.1.0",
+    "inquirer": "^8.0.0",
+    "ora": "^5.0.0",
+    "prettier-eslint": "^15.0.1",
+    "progress": "^2.0.3"
+  },
+  "devDependencies": {
     "@types/babel__generator": "^7.6.4",
     "@types/babel__template": "^7.4.1",
     "@types/babel__traverse": "^7.17.1",
@@ -41,10 +40,11 @@
     "@types/inquirer": "^8.2.1",
     "@types/node": "^18.0.3",
     "@types/progress": "^2.0.5",
-    "chalk": "^4.0.0",
-    "commander": "^9.3.0",
-    "ora": "^5.0.0",
+    "gulp": "^3.9.1",
+    "gulp-uglify": "^3.0.2",
     "rimraf": "^3.0.2",
-    "ts-node": "^10.8.2"
+    "ts-node": "^10.8.2",
+    "tslib": "^2.4.0",
+    "typescript": "^4.7.4"
   }
 }

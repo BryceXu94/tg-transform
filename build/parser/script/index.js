@@ -1,15 +1,1 @@
-import { parse } from '@babel/parser';
-import traverse from '@babel/traverse';
-import generate from '@babel/generator';
-export class ScriptParser {
-    parse(code, opt) {
-        const ast = parse(code, {
-            sourceType: 'unambiguous',
-            plugins: ['typescript', 'jsx'],
-        });
-        traverse(ast, opt);
-        return generate(ast).code;
-    }
-}
-export const scriptParser = new ScriptParser();
-//# sourceMappingURL=index.js.map
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.scriptParser=exports.ScriptParser=void 0;const tslib_1=require("tslib"),parser_1=require("@babel/parser"),traverse_1=tslib_1.__importDefault(require("@babel/traverse")),generator_1=tslib_1.__importDefault(require("@babel/generator")),template_1=tslib_1.__importDefault(require("@babel/template"));class ScriptParser{parse(e,r){var t=(0,parser_1.parse)(e,{sourceType:"unambiguous",plugins:["typescript","jsx"]});return(0,traverse_1.default)(t,{Program:{enter(e){e.traverse({ImportDeclaration(r){const e=r.get("source").node.value;if("element-plus"===e){const a=r.get("specifiers");var n=r.node.importKind;let t=null;const l=[];a.forEach(e=>{const r=e.node?.imported?.name;t=e.type,r&&l.push(r.replace(/^El/,"Tg"))});let e="";"type"===n&&"ImportSpecifier"===t?e=`type {${l.join(",")}}`:"value"===n&&"ImportDefaultSpecifier"===t?e="TgComponents":"value"===n&&"ImportSpecifier"===t&&(e=`{${l.join(",")}}`);n=(0,template_1.default)(`import ${e} from '@tiangong/components';`,{plugins:["jsx","typescript"]})();r.insertBefore(n),r.remove()}else"element-plus/lib/locale/lang/zh-cn"===e?r.get("source").node.value="@tiangong/components/lib/lang/zh-cn":0===e.indexOf("element-plus")&&(r.get("source").node.value="@tiangong/components")}})}},JSXOpeningElement:{enter(e){const r=e.get("name").node;0===r.name.indexOf("el-")?r.name=r.name.replace(/^el-/,"tg-"):/^El[A-Z]/.test(r.name)&&(r.name=r.name.replace(/^El/,"Tg"))}},JSXClosingElement:{enter(e){const r=e.get("name").node;0===r.name.indexOf("el-")?r.name=r.name.replace(/^el-/,"tg-"):/^El[A-Z]/.test(r.name)&&(r.name=r.name.replace(/^El/,"Tg"))}},TSTypeQuery:{enter(e){const r=e.get("exprName");e=r.node.name;e&&/^El[A-Z]/.test(e)&&(r.node.name=r.node.name.replace(/^El/,"Tg"))}},Identifier:{enter(e){var r=e.node.name;(r&&/^El[A-Z]/.test(r)||"ElementPlus"===r)&&(e.node.name="ElementPlus"===r?"TgComponents":e.node.name.replace(/^El/,"Tg"))}}}),(0,generator_1.default)(t,{retainLines:!0},e).code}}exports.ScriptParser=ScriptParser,exports.scriptParser=new ScriptParser;
