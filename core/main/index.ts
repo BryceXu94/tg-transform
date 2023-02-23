@@ -1,5 +1,6 @@
 import { readFile, writeFile } from 'fs-extra';
 import { cwd } from 'node:process';
+import chalk from 'chalk'
 import { vueParser } from '../parser/vue';
 import { scriptParser } from '../parser/script';
 import { IFiles, PARSER_ENUM } from '../types';
@@ -7,6 +8,7 @@ import { getFilesPath } from '../utils/read-files';
 import { prettierFormat } from '../utils/prettier'
 import { progress } from '../utils/progress'
 import { queue } from '../utils/queue'
+import { exec } from '../utils/exec'
 
 export const sourceDir = `${cwd()}/src`;
 
@@ -40,28 +42,42 @@ async function parseFile(file: IFiles[0]) {
     const code = await readFile(path, {
       encoding: 'utf-8'
     });
+    let parsed = false;
     switch (suffix) {
       case 'ts':
-      case 'tsx':
-        outputCode = scriptParser.parse(code)
+      case 'tsx': {
+        const res = scriptParser.parse(code);
+        if (res.parsed) {
+          outputCode = res.code;
+          parsed = true;
+        }
         break;
+      }
       case 'vue': {
-        outputCode = vueParser.parse(code);
-        parser = PARSER_ENUM.VUE;
+        const res = vueParser.parse(code);
+        if (res.parsed) {
+          outputCode = res.code;
+          parsed = true;
+          parser = PARSER_ENUM.VUE;
+        }
       }
       break;
       default:
         break;
     }
-    outputCode = await prettierFormat(outputCode, parser);
+    if (parsed) {
+      outputCode = await prettierFormat(outputCode, parser);
+    }
     progress.add()
-    await writeFile(path, outputCode);
+    if (parsed) {
+      await writeFile(path, outputCode);
+    }
     resolve(true);
   })
 }
 
 export const run = async () => {
-  // const st = performance.now();
+  const st = performance.now();
   const paths = await getFilesPath(sourceDir);
   progress.setTotal(paths.length);
   const arr:Promise<unknown>[]= []
@@ -71,8 +87,11 @@ export const run = async () => {
     }))
   }
   await Promise.all(arr)
-  // const et = performance.now();
-  // console.log((et-st)/1000);
+  console.log(chalk.blue('正在执行eslint fix'));
+  await exec('npx', ['eslint', '--fix', '--ext', '.js,.vue,.jsx,.tsx,.ts', 'src']);
+  console.log(chalk.green('任务完成'));
+  const et = performance.now();
+  console.log(`共${paths.length}个文件，耗时${et-st}ms`);
 };
 
 // run();

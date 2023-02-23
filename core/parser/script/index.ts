@@ -12,6 +12,7 @@ export class ScriptParser {
         'jsx'
       ],
     })
+    let parsed = false;
     // traverse(ast, opt);
     
     traverse(ast, {
@@ -48,10 +49,13 @@ export class ScriptParser {
                 const tg = template(`import ${uses} from '@tiangong/components';`, { plugins: ['jsx','typescript'] })();
                 curPath.insertBefore(tg);
                 curPath.remove();
+                parsed = true;
               } else if (requirePath === 'element-plus/lib/locale/lang/zh-cn') {
                 curPath.get('source').node.value = '@tiangong/components/lib/lang/zh-cn';
+                parsed = true;
               } else if (requirePath.indexOf('element-plus') === 0) {
                 curPath.get('source').node.value = '@tiangong/components';
+                parsed = true;
               }
             },
           })
@@ -75,8 +79,10 @@ export class ScriptParser {
           const nameNode = (path.get('name') as any).node as any;
           if (nameNode.name.indexOf('el-') === 0) {
             nameNode.name = nameNode.name.replace(/^el-/, 'tg-');
+            parsed = true;
           } else if (/^El[A-Z]/.test(nameNode.name)) {
             nameNode.name = nameNode.name.replace(/^El/, 'Tg');
+            parsed = true;
           }
         }
       },
@@ -85,8 +91,10 @@ export class ScriptParser {
           const nameNode = (path.get('name') as any).node as any;
           if (nameNode.name.indexOf('el-') === 0) {
             nameNode.name = nameNode.name.replace(/^el-/, 'tg-');
+            parsed = true;
           } else if (/^El[A-Z]/.test(nameNode.name)) {
             nameNode.name = nameNode.name.replace(/^El/, 'Tg');
+            parsed = true;
           }
         }
       },
@@ -96,6 +104,7 @@ export class ScriptParser {
           const name = exprName.node.name;
           if (name && /^El[A-Z]/.test(name)) {
             exprName.node.name = exprName.node.name.replace(/^El/, 'Tg');
+            parsed = true;
           }
         },
       },
@@ -105,16 +114,27 @@ export class ScriptParser {
           if (name && /^El[A-Z]/.test(name) || name === 'ElementPlus') {
             if (name === 'ElementPlus') {
               path.node.name = 'TgComponents';
+              parsed = true;
             } else {
               path.node.name = path.node.name.replace(/^El/, 'Tg');
+              parsed = true;
             }
           }
         },
       },
     });
-    return generate(ast, {
-      retainLines: true,
-    }, code).code;
+    if (!parsed) {
+      return {
+        code,
+        parsed,
+      };
+    }
+    return {
+      code: generate(ast, {
+        retainLines: true,
+      }, code).code,
+      parsed
+    };
   }
 }
 export const scriptParser = new ScriptParser();
