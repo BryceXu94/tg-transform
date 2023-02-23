@@ -72,7 +72,7 @@ async function parseFile(file: IFiles[0]) {
     if (parsed) {
       await writeFile(path, outputCode);
     }
-    resolve(true);
+    resolve(parsed);
   })
 }
 
